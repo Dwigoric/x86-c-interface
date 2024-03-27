@@ -23,17 +23,3 @@ float* saxpy(int n, float a, float* x, float* y){
 
     return z;
 }
-
-// for testing ----------------------------------------
-// int main(){
-//     int n = 3;
-//     float a = 2.0;
-//     float arr1[] = {1.0, 2.0, 3.0};
-//     float arr2[] = {11.0, 12.0, 13.0};
-
-//     float* arr3 = saxpy(n, a, arr1, arr2);
-
-//     for(int i=0; i<3; i++){
-//         printf("Element %d = %.2f\n", i, arr3[i]);
-//     }
-// }
