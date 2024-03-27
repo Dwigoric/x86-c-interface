@@ -3,8 +3,8 @@
 #include <time.h>
 #include <math.h>
 
-extern float* saxpy(int n, float a, float* x, float* y);    //C kernel
-// extern... for the assembly kernel
+extern float* saxpy_c(int n, float a, float* x, float* y);    //C kernel
+extern float* saxpy_asm(int, float, float*, float*);
 
 float* generateArr1(int n){ //populate array 1 (starting at 1.0, increments by 1.0)
     float* array = (float*)malloc(n*sizeof(float));
@@ -26,12 +26,12 @@ float* generateArr2(int n){ //populate array 2 (starting at 11.0, increments by 
     return array;
 }
 
-int main(){
+int main() {
 
-    //EDIT THESE TWO VARIABLES ONLY ------
+    // --- EDIT THESE TWO VARIABLES ONLY ---
     int power = 28; //vector size exponent
     float a = 2.0; //scalar variable
-    //------------------------------------
+    // -------------------------------------
 
     int n = pow(2, power);
     float* arr1 = generateArr1(n);
@@ -39,7 +39,7 @@ int main(){
 
     //timing the C kernel
     clock_t startC = clock(), diffC;
-    float* arr3 = saxpy(n, a, arr1, arr2);
+    float* arr3 = saxpy_c(n, a, arr1, arr2);
     diffC = clock() - startC;
     int cTimeMs = diffC * 1000 / CLOCKS_PER_SEC;
 
@@ -50,7 +50,7 @@ int main(){
 
     //timing the Assembly kernel
     clock_t startA = clock(), diffA;
-    //insert function here
+    float* asmArr3 = saxpy_asm(n, a, arr1, arr2);
     diffA = clock() - startA;
     int aTimeMs = diffA * 1000 / CLOCKS_PER_SEC;
 

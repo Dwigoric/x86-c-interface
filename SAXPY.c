@@ -9,7 +9,7 @@
 // Output:  Store result in vector Z. 
 //          Display the result of 1st ten elements of vector Z for all versions of kernel (i.e., C and x86-64).
 
-float* saxpy(int n, float a, float* x, float* y){
+float* saxpy_c(int n, float a, float* x, float* y){
     int i;
     float* z = (float*)malloc(n*sizeof(float));
     if (z == NULL){
