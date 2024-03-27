@@ -54,6 +54,9 @@ int main() {
     diffA = clock() - startA;
     int aTimeMs = diffA * 1000 / CLOCKS_PER_SEC;
 
-    //insert printing of results here
+    for (int i = 0; i < 10; i++) {
+        printf("Element %d = %.2f\n", i, asmArr3[i]);
+    }
+    
     printf("Time taken for Assembly kernel at vector size 2^%d: %d s, %d ms\n\n", power, aTimeMs/1000, aTimeMs%1000);
 }
