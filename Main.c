@@ -3,8 +3,8 @@
 #include <time.h>
 #include <math.h>
 
-extern float* saxpy_c(int n, float a, float* x, float* y);    //C kernel
-extern float* saxpy_asm(int, float, float*, float*);
+extern float* saxpy_c(int n, float a, float* x, float* y, float* z);    //C kernel
+extern float* saxpy_asm(int, float, float*, float*, float*);
 
 float* generateArr1(int n){ //populate array 1 (starting at 1.0, increments by 1.0)
     float* array = (float*)malloc(n*sizeof(float));
@@ -26,6 +26,11 @@ float* generateArr2(int n){ //populate array 2 (starting at 11.0, increments by 
     return array;
 }
 
+float* generateEmptyArr(int n){ //generate empty array
+	float* array = (float*)malloc(n*sizeof(float));
+	return array;
+}
+
 int main() {
 
     // --- EDIT THESE TWO VARIABLES ONLY ---
@@ -36,10 +41,13 @@ int main() {
     int n = pow(2, power);
     float* arr1 = generateArr1(n);
     float* arr2 = generateArr2(n);
+    float* zC;
+    float* zAsm;
 
     //timing the C kernel
     clock_t startC = clock(), diffC;
-    float* arr3 = saxpy_c(n, a, arr1, arr2);
+    zC = generateEmptyArr(n);
+    float* arr3 = saxpy_c(n, a, arr1, arr2, zC);
     diffC = clock() - startC;
     int cTimeMs = diffC * 1000 / CLOCKS_PER_SEC;
 
@@ -50,19 +58,22 @@ int main() {
 
     //timing the Assembly kernel
     clock_t startA = clock(), diffA;
-    float* asmArr3 = saxpy_asm(n, a, arr1, arr2);
+    zAsm = generateEmptyArr(n);
+    float* asmArr3 = saxpy_asm(n, a, arr1, arr2, zAsm);
     diffA = clock() - startA;
     int aTimeMs = diffA * 1000 / CLOCKS_PER_SEC;
 
     for (int i = 0; i < 10; i++) {
         printf("Element %d = %.2f\n", i, asmArr3[i]);
     }
+    
+    printf("Time taken for Assembly kernel at vector size 2^%d: %d s, %d ms\n\n", power, aTimeMs/1000, aTimeMs%1000);
 
     // Free allocated memory
     free(arr1);
     free(arr2);
     free(arr3);
     free(asmArr3);
-    
-    printf("Time taken for Assembly kernel at vector size 2^%d: %d s, %d ms\n\n", power, aTimeMs/1000, aTimeMs%1000);
+    free(zC);
+    free(zAsm);
 }

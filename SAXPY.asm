@@ -19,13 +19,8 @@ saxpy_asm:
 
 CONTINUE:
 	; Z[i] = A * X[i] + Y[i]
-	; ecx = n, xmm1 = A, r8 = *X, r9 = *Y
-
-	; allocate memory for Z
-	sub rsp, 8*5
-	call malloc
-	add rsp, 8*5
-	mov rdi, rax ; store the returned pointer
+	; ecx = n, xmm1 = A, r8 = *X, r9 = *Y, rsp+32 = *Z
+	mov rsi, [rsp+32] ; rsi = *Z
 
 	mov rax, 0 ; i = 0
 
@@ -33,7 +28,7 @@ LOOP:
 	movsd xmm0, [r8 + rax*8] ; xmm0 = X[i]
 	mulsd xmm0, xmm1 ; xmm0 = A * X[i]
 	addsd xmm0, [r9 + rax*8] ; xmm0 = A * X[i] + Y[i]
-	movsd [rdi + rax*8], xmm0 ; Z[i] = A * X[i] + Y[i]
+	movsd [rsi + rax*8], xmm0 ; Z[i] = A * X[i] + Y[i]
 
 	inc rax
 	loop LOOP
