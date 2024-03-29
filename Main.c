@@ -57,6 +57,12 @@ int main() {
     for (int i = 0; i < 10; i++) {
         printf("Element %d = %.2f\n", i, asmArr3[i]);
     }
+
+    // Free allocated memory
+    free(arr1);
+    free(arr2);
+    free(arr3);
+    free(asmArr3);
     
     printf("Time taken for Assembly kernel at vector size 2^%d: %d s, %d ms\n\n", power, aTimeMs/1000, aTimeMs%1000);
 }
