@@ -1,7 +1,5 @@
 section .data
 
-array_ptr dq 0
-
 invalid_input db "Invalid input: n must be greater than 0", 10, 0
 test_str db "RCX is %d", 10, 0
 
@@ -31,7 +29,7 @@ CONTINUE:
 	sub rsp, 8*5
 	call malloc
 	add rsp, 8*5
-	mov qword [array_ptr], rax ; store the returned pointer
+	mov rdi, rax ; store the returned pointer
 
 	mov rax, 0 ; i = 0
 
