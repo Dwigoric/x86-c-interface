@@ -3,8 +3,8 @@
 #include <time.h>
 #include <math.h>
 
-extern float* saxpy_c(int n, float a, float* x, float* y, float* z);    //C kernel
-extern float* saxpy_asm(int, float, float*, float*, float*);
+extern void saxpy_c(int n, float a, float* x, float* y, float* z);    //C kernel
+extern void saxpy_asm(int, double, double*, double*, double*);
 
 float* generateArr1(int n){ //populate array 1 (starting at 1.0, increments by 1.0)
     float* array = (float*)malloc(n*sizeof(float));
@@ -47,24 +47,24 @@ int main() {
     //timing the C kernel
     clock_t startC = clock(), diffC;
     zC = generateEmptyArr(n);
-    float* arr3 = saxpy_c(n, a, arr1, arr2, zC);
+    saxpy_c(n, a, arr1, arr2, zC);
     diffC = clock() - startC;
     int cTimeMs = diffC * 1000 / CLOCKS_PER_SEC;
 
     for(int i=0; i<10; i++){ //prints first 10 elements
-        printf("Element %d = %.2f\n", i, arr3[i]);
+        printf("Element %d = %.2f\n", i, zC[i]);
     }
     printf("Time taken for C kernel at vector size 2^%d: %d s, %d ms\n\n", power, cTimeMs/1000, cTimeMs%1000);
 
     //timing the Assembly kernel
     clock_t startA = clock(), diffA;
     zAsm = generateEmptyArr(n);
-    float* asmArr3 = saxpy_asm(n, a, arr1, arr2, zAsm);
+    saxpy_asm(n, a, arr1, arr2, zAsm);
     diffA = clock() - startA;
     int aTimeMs = diffA * 1000 / CLOCKS_PER_SEC;
 
     for (int i = 0; i < 10; i++) {
-        printf("Element %d = %.2f\n", i, asmArr3[i]);
+        printf("Element %d = %.2f\n", i, zAsm[i]);
     }
     
     printf("Time taken for Assembly kernel at vector size 2^%d: %d s, %d ms\n\n", power, aTimeMs/1000, aTimeMs%1000);
@@ -72,8 +72,6 @@ int main() {
     // Free allocated memory
     free(arr1);
     free(arr2);
-    free(arr3);
-    free(asmArr3);
     free(zC);
     free(zAsm);
 }
