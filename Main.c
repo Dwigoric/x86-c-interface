@@ -34,7 +34,7 @@ float* generateEmptyArr(int n){ //generate empty array
 int main() {
 
     // --- EDIT THESE TWO VARIABLES ONLY ---
-    int power = 10; //vector size exponent
+    int power = 30; //vector size exponent
     float a = 2.0; //scalar variable
     // -------------------------------------
 
