@@ -207,3 +207,7 @@
 | Run 29      | 1.291    | 1.950           |
 | Run 30      | 1.116    | 1.944           |
 | **Average** | 1.283    | 2.278           |
+
+
+BRIEF PERFORMANCE ANALYSIS
+The performance of the kernels in debug mode followed our expectations: the C kernel had a longer time to execute than the Assembly kernel across all vector sizes.
