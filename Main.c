@@ -4,7 +4,7 @@
 #include <math.h>
 
 extern void saxpy_c(int n, float a, float* x, float* y, float* z);    //C kernel
-extern void saxpy_asm(int, double, double*, double*, double*);
+extern void saxpy_asm(int, float, float*, float*, float*);
 
 float* generateArr1(int n){ //populate array 1 (starting at 1.0, increments by 1.0)
     float* array = (float*)malloc(n*sizeof(float));
