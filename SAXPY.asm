@@ -22,13 +22,11 @@ CONTINUE:
 	; ecx = n, xmm1 = A, r8 = *X, r9 = *Y, rsp+40 = *Z
 	mov rsi, [rsp+40] ; rsi = *Z
 
-	mov rax, 0 ; i = 0
-
-LOOP:
+ITERATE:
 	movss xmm0, [r8 + rax*4] ; xmm0 = X[i]
 	mulss xmm0, xmm1 ; xmm0 = A * X[i]
 	addss xmm0, [r9 + rax*4] ; xmm0 = A * X[i] + Y[i]
 	movss [rsi + rax*4], xmm0 ; Z[i] = A * X[i] + Y[i]
 
 	inc rax
-	loop LOOP
+	loop ITERATE
