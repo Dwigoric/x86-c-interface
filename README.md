@@ -173,7 +173,6 @@
 | Run 30      | 0.19     | 0.51            |
 | **Average** | 0.23     | 0.32            |
 
-
 | 2^30        | C Kernel | Assembly Kernel |
 |-------------|----------|-----------------|
 | Run 01      | 2.445    | 9.526           |
@@ -208,9 +207,12 @@
 | Run 30      | 1.116    | 1.944           |
 | **Average** | 1.283    | 2.278           |
 
+## Programs' Output
+![image](https://github.com/Dwigoric/x86-c-interface/assets/30539952/00c6ff4a-772e-4812-84b6-a01820ba8c0d)
 
-## BRIEF PERFORMANCE ANALYSIS
+## Brief Performance Analysis
+### Debug Mode
+The performance of the kernels in debug mode followed our expectations: the C kernel had a longer time to execute than the Assembly kernel across all vector sizes. This is likely due to C having a more significant overhead with memory allocation and higher-level constructs. On the other hand, Assembly language avoids the compiler overhead and allows direct control over the hardware resources, allowing it to outperform C.
 
-**Debug mode:** The performance of the kernels in debug mode followed our expectations: the C kernel had a longer time to execute than the Assembly kernel across all vector sizes. This is likely due to C having a larger overhead with memory allocation and higher-level constructs. On the other hand, Assembly language avoids the compiler overhead and allows direct control over the hardware resources, allowing it to outperform C.
-
-**Release mode:** The performance of the kernels in release mode was unexpected: the C kernel executed slightly faster than the Assembly kernel. This may be due to the compiler optimizations implemented in release mode benefting the C kernel more than the Assembly kernel. In any case, the difference is miniscule, and further practice with Assembly may allow us to better fine-tune the code if ever the problem lies in not-so-efficient instructions.
+### Release Mode
+The performance of the kernels in release mode was unexpected: the C kernel executed slightly faster than the Assembly kernel. This may be because the compiler optimizations implemented in release mode benefit the C kernel more than the Assembly kernel. In any case, the difference is miniscule, and further practice with Assembly may allow us to fine-tune the code better if the problem lies in not-so-efficient instructions.
