@@ -31,13 +31,7 @@ float* generateEmptyArr(int n){ //generate empty array
 	return array;
 }
 
-int main() {
-
-    // --- EDIT THESE TWO VARIABLES ONLY ---
-    int power = 30; //vector size exponent
-    float a = 2.0; //scalar variable
-    // -------------------------------------
-
+void execute(int power, float a) {
     int n = pow(2, power);
     float* xC = generateArr1(n);
     float* xAsm = generateArr1(n);
@@ -45,28 +39,80 @@ int main() {
     float* zC = generateEmptyArr(n);
     float* zAsm = generateEmptyArr(n);
 
-    //timing the C kernel
+    int cRuntimesSecond[30],
+        asmRuntimesSecond[30],
+        cRuntimesMillisecond[30],
+        asmRuntimesMillisecond[30];
+
+    printf("===============\n");
+    printf("n = 2^%d\n", power);
+    printf("A = %.2f\n", a);
+    printf("===============\n");
+
+    // ------ C Kernel ------
+    printf("[C Kernel]\n");
     clock_t startC = clock(), diffC;
     saxpy_c(n, a, xC, y, zC);
     diffC = clock() - startC;
     int cTimeMs = diffC * 1000 / CLOCKS_PER_SEC;
 
-    for(int i=0; i<10; i++){ //prints first 10 elements
+    for (int i = 0; i < 10; i++) { //prints first 10 elements
         printf("Element %d = %.2f\n", i, zC[i]);
     }
-    printf("Time taken for C kernel at vector size 2^%d: %d s, %d ms\n\n", power, cTimeMs/1000, cTimeMs%1000);
+    cRuntimesSecond[0] = cTimeMs / 1000;
+    cRuntimesMillisecond[0] = cTimeMs % 1000;
 
-    //timing the Assembly kernel
+    // Run for another 29 times
+    for (int i = 1; i < 30; i++) {
+		startC = clock();
+		saxpy_c(n, a, xC, y, zC);
+		diffC = clock() - startC;
+		cTimeMs = diffC * 1000 / CLOCKS_PER_SEC;
+		cRuntimesSecond[i] = cTimeMs / 1000;
+		cRuntimesMillisecond[i] = cTimeMs % 1000;
+	}
+
+    // ------ Assembly Kernel ------
+    printf("[x86-64 Kernel]\n");
     clock_t startA = clock(), diffA;
     saxpy_asm(n, a, xAsm, y, zAsm);
     diffA = clock() - startA;
     int aTimeMs = diffA * 1000 / CLOCKS_PER_SEC;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) { //prints first 10 elements
         printf("Element %d = %.2f\n", i, zAsm[i]);
     }
-    
-    printf("Time taken for Assembly kernel at vector size 2^%d: %d s, %d ms\n\n", power, aTimeMs/1000, aTimeMs%1000);
+    asmRuntimesSecond[0] = aTimeMs / 1000;
+    asmRuntimesMillisecond[0] = aTimeMs % 1000;
+
+    // Run for another 29 times
+    for (int i = 1; i < 30; i++) {
+        startA = clock();
+        saxpy_asm(n, a, xAsm, y, zAsm);
+        diffA = clock() - startA;
+        aTimeMs = diffA * 1000 / CLOCKS_PER_SEC;
+        asmRuntimesSecond[i] = aTimeMs / 1000;
+        asmRuntimesMillisecond[i] = aTimeMs % 1000;
+    }
+
+    // Print runtimes
+    int cTotalTimeMs = 0;
+    printf("\n\n");
+    printf(" --- C Kernel Runtimes ---\n");
+    for (int i = 0; i < 30; i++) {
+        cTotalTimeMs += cRuntimesSecond[i] * 1000 + cRuntimesMillisecond[i];
+		printf("Run %d: %d.%d seconds\n", i + 1, cRuntimesSecond[i], cRuntimesMillisecond[i]);
+	}
+    printf("Average: %d.%d seconds\n", cTotalTimeMs / 30000, (cTotalTimeMs % 30000) / 30);
+
+    int aTotalTimeMs = 0;
+    printf("\n");
+    printf(" --- x86-64 Kernel Runtimes ---\n");
+    for (int i = 0; i < 30; i++) {
+        aTotalTimeMs += asmRuntimesSecond[i] * 1000 + asmRuntimesMillisecond[i];
+        printf("Run %d: %d.%d seconds\n", i + 1, asmRuntimesSecond[i], asmRuntimesMillisecond[i]);
+    }
+    printf("Average: %d.%d seconds\n", aTotalTimeMs / 30000, (aTotalTimeMs % 30000) / 30);
 
     // Free allocated memory
     free(xC);
@@ -74,4 +120,15 @@ int main() {
     free(y);
     free(zC);
     free(zAsm);
+}
+
+int main() {
+    int powers[3] = { 20, 24, 30 };
+    float scalars[3] = { 2.0f, 3.0f, 4.0f };
+
+    for (int i = 0; i < 3; i++) {
+		execute(powers[i], scalars[i]);
+	}
+
+    return 0;
 }
