@@ -20,7 +20,7 @@ saxpy_asm:
 CONTINUE:
 	; Z[i] = A * X[i] + Y[i]
 	; ecx = n, xmm1 = A, r8 = *X, r9 = *Y, rsp+40 = *Z
-	mov rsi, [rsp+40] ; rsi = *Z
+	mov r11, [rsp+40] ; r11 = *Z
 
 	xor rax, rax ; i = 0
 
@@ -28,7 +28,7 @@ ITERATE:
 	movss xmm0, [r8 + rax*4] ; xmm0 = X[i]
 	mulss xmm0, xmm1 ; xmm0 = A * X[i]
 	addss xmm0, [r9 + rax*4] ; xmm0 = A * X[i] + Y[i]
-	movss [rsi + rax*4], xmm0 ; Z[i] = A * X[i] + Y[i]
+	movss [r11 + rax*4], xmm0 ; Z[i] = A * X[i] + Y[i]
 
 	inc rax
 	loop ITERATE
