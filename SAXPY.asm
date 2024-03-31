@@ -25,10 +25,10 @@ CONTINUE:
 	mov rax, 0 ; i = 0
 
 LOOP:
-	movss xmm0, [r8 + rax*8] ; xmm0 = X[i]
+	movss xmm0, [r8 + rax*4] ; xmm0 = X[i]
 	mulss xmm0, xmm1 ; xmm0 = A * X[i]
-	addss xmm0, [r9 + rax*8] ; xmm0 = A * X[i] + Y[i]
-	movss [rsi + rax*8], xmm0 ; Z[i] = A * X[i] + Y[i]
+	addss xmm0, [r9 + rax*4] ; xmm0 = A * X[i] + Y[i]
+	movss [rsi + rax*4], xmm0 ; Z[i] = A * X[i] + Y[i]
 
 	inc rax
 	loop LOOP
