@@ -212,3 +212,5 @@
 ## BRIEF PERFORMANCE ANALYSIS
 
 **Debug mode:** The performance of the kernels in debug mode followed our expectations: the C kernel had a longer time to execute than the Assembly kernel across all vector sizes. This is likely due to C having a larger overhead with memory allocation and higher-level constructs. On the other hand, Assembly language avoids the compiler overhead and allows direct control over the hardware resources, allowing it to outperform C.
+
+**Release mode:** The performance of the kernels in release mode was unexpected: the C kernel executed slightly faster than the Assembly kernel. This may be due to the compiler optimizations implemented in release mode benefting the C kernel more than the Assembly kernel. In any case, the difference is miniscule, and further practice with Assembly may allow us to better fine-tune the code if ever the problem lies in not-so-efficient instructions.
